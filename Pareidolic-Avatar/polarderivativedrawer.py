@@ -26,36 +26,40 @@ class DerivativeTurtle:
         self._r = randint(0,256)
         self._g = randint(0,256)
         self._b = randint(0,256)
+        while (self._r+self._g+self._b < 120): #Dark colors are kinda boring
+            print ('rejected color for borrringg')
+            self._r = randint(0,256)
+            self._g = randint(0,256)
+            self._b = randint(0,256)
         self._dr = randint(-5,5)
         self._dg = randint(-5,5)
         self._db = randint(-5,5)
         self._radius = uniform(2,5)
 
-    def move(self):
-        self._x += self._vel * cos(radians(self._rot))
-        self._y += self._vel * sin(radians(self._rot))
-        self._rot += self._drot
-        self._r += self._dr
+    def move(self,time = 1.0):
+        self._x += (self._vel * cos(radians(self._rot)))*time
+        self._y += (self._vel * sin(radians(self._rot)))*time
+        self._rot += (self._drot)*time
+        self._r += (self._dr)*time
         self._r = min(255,max(0,self._r)) #clamp to 0-255
-        self._g += self._dg
+        self._g += (self._dg)*time
         self._g = min(255,max(0,self._g))
-        self._b += self._db
+        self._b += (self._db)*time
         self._b = min(255,max(0,self._b))
 
-    def randomwalk(self):
-        self._drot += uniform(-1,1)
-        self._vel += uniform(-1,1)
-        self._radius += uniform(-.1,.1)
-        self._dr += uniform(-5,.5)
-        self._dg += uniform(-5,.5)
-        self._db += uniform(-5,.5)
+    def randomwalk(self, time = 1.0):
+        self._drot += (uniform(-1,1))*time
+        self._vel += (uniform(-1,1))*time
+        self._radius += (uniform(-.1,.1))*time
+        self._dr += (uniform(-1,1))*time
+        self._dg += (uniform(-1,1))*time
+        self._db += (uniform(-1,1))*time
         
 
-    def draw(self, drw, mirror=True):
-        
-        drw.brush(self._x,self._y, int(self._r),int(self._g),int(self._b),self._radius, abs(self._vel))
+    def draw(self, drw, time=1.0, mirror=True):
+        drw.brush(self._x,self._y, int(self._r),int(self._g),int(self._b),self._radius, abs(time*self._vel))
         if mirror:
-            drw.brush(self._x,drw.getWidth() - self._y, int(self._r),int(self._g),int(self._b),self._radius, abs(self._vel))
+            drw.brush(self._x,drw.getWidth() - self._y, int(self._r),int(self._g),int(self._b),self._radius, abs(time*self._vel))
 
 def createColorSchemeParidolia(filename):
     drw = Drawing()
@@ -67,22 +71,24 @@ def createColorSchemeParidolia(filename):
         turt._r = dominantColor[0] + randint(-20,20)
         turt._g = dominantColor[1] + randint(-20,20)
         turt._b = dominantColor[1] + randint(-20,20)
-        lifetime = randint(30,100)
+        lifetime = randint(15,50)
         for t  in range(lifetime):
-            turt.move()
-            turt.randomwalk()
-            turt.draw(drw)
+            for sub in range(4):
+                turt.move(.25)
+                turt.randomwalk(.25)
+                turt.draw(drw,.25)
     for i in range(randint(1,3)):
         turt = DerivativeTurtle()
         turt.randomize()
         turt._r = highlight[0] + randint(-20,20)
         turt._g = highlight[1] + randint(-20,20)
         turt._b = highlight[1] + randint(-20,20)
-        lifetime = randint(30,100)
+        lifetime = randint(10,30)
         for t  in range(lifetime):
-            turt.move()
-            turt.randomwalk()
-            turt.draw(drw)
+            for sub in range(4):
+                turt.move(.25)
+                turt.randomwalk(.25)
+                turt.draw(drw,.25)
     drw.toImage('./tests/polarderivativeturtle/'+filename+'.png',False)
 
 for i in range(5):
