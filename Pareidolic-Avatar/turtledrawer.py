@@ -53,7 +53,35 @@ def createTurtleParidolia(filename):
             turt.move()
             turt.randomwalk()
             turt.draw(drw)
-    drw.toImage('./tests/basicturtle/'+filename+'.png',True)
+    drw.toImage('./tests/basicturtle/'+filename+'.png',False)
 
-for i in range(10):
-    createTurtleParidolia('basictest-'+str(i))
+def createColorSchemeParidolia(filename):
+    drw = Drawing()
+    dominantColor = [randint(0,255),randint(0,255),randint(0,255)]
+    highlight = [randint(0,255),randint(0,255),randint(0,255)]
+    for i in range(randint(7,10)):
+        turt = Turtle()
+        turt.randomize()
+        turt._r = dominantColor[0] + randint(-20,20)
+        turt._g = dominantColor[1] + randint(-20,20)
+        turt._b = dominantColor[1] + randint(-20,20)
+        lifetime = randint(30,100)
+        for t  in range(lifetime):
+            turt.move()
+            turt.randomwalk()
+            turt.draw(drw)
+    for i in range(randint(1,3)):
+        turt = Turtle()
+        turt.randomize()
+        turt._r = highlight[0] + randint(-20,20)
+        turt._g = highlight[1] + randint(-20,20)
+        turt._b = highlight[1] + randint(-20,20)
+        lifetime = randint(30,100)
+        for t  in range(lifetime):
+            turt.move()
+            turt.randomwalk()
+            turt.draw(drw)
+    drw.toImage('./tests/basicturtle/'+filename+'.png',False)
+
+for i in range(5):
+    createColorSchemeParidolia('colorschemetest-'+str(i))
