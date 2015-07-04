@@ -52,9 +52,10 @@ class DerivativeTurtle:
         
 
     def draw(self, drw, mirror=True):
-        drw.brush(self._x,self._y, int(self._r),int(self._g),int(self._b),self._radius, self._vel)
+        
+        drw.brush(self._x,self._y, int(self._r),int(self._g),int(self._b),self._radius, abs(self._vel))
         if mirror:
-            drw.brush(self._x,drw.getWidth() - self._y, int(self._r),int(self._g),int(self._b),self._radius, self._vel)
+            drw.brush(self._x,drw.getWidth() - self._y, int(self._r),int(self._g),int(self._b),self._radius, abs(self._vel))
 
 def createColorSchemeParidolia(filename):
     drw = Drawing()
