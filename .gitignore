@@ -57,3 +57,5 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
+
+Pareidolic-Avatar/__pycache__/*
