@@ -45,9 +45,9 @@ class BezierLine(object):
             speed = (x-xold)**2 + (y-yold)**2
             rad = self.getRad(0)
             r,g,b = self.getRGB(time)
-            drw.brush(y,x, r,g,b, rad, speed)
+            drw.brush(x,y, r,g,b, rad, speed)
             if mirror:
-                drw.brush(y,drw.getWidth() - x, r,g,b,rad, speed)
+                drw.brush(drw.getWidth()-x, y, r,g,b,rad, speed)
             
             dt = (rad/2)/speed *dt
             time += dt

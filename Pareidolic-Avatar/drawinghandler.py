@@ -80,4 +80,4 @@ class Drawing():
                     weight = (1-((i-y)**2 + (j-x)**2)/radius**2)*4*speed/radius
                     weight = min(weight, 1)
                     if weight > 0:
-                        self._data[int(i)][int(j)].mixColor(r,g,b,weight*256)
+                        self._data[int(j)][int(i)].mixColor(r,g,b,weight*256)

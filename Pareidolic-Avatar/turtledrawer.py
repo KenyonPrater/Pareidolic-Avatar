@@ -41,7 +41,7 @@ class Turtle:
         speed = (self._dx **2 + self._dy **2)**.5
         drw.brush(self._x,self._y, self._r,self._g,self._b,self._radius, speed)
         if mirror:
-            drw.brush(self._x,drw.getWidth() - self._y, self._r,self._g,self._b,self._radius, speed)
+            drw.brush(drw.getWidth() - self._x, self._y, self._r,self._g,self._b,self._radius, speed)
 
 def createTurtleParidolia(filename):
     drw = Drawing()
