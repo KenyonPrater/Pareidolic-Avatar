@@ -53,6 +53,29 @@ class BezierLine(object):
             time += dt
             xold, yold = x, y
 
+    def copy(self):
+        bz = BezierLine()
+        bz._poscurve = self._poscurve.copy()
+        bz._rcurve = self._rcurve.copy()
+        bz._gcurve = self._gcurve.copy()
+        bz._bcurve = self._bcurve.copy()
+        bz._radcurve = self._radcurve.copy()
+        return bz
+
+    def randomize(self, positionmax, colormax, radiusmax):
+        self._poscurve.randomjostle(positionmax)
+        self._rcurve.randomjostle(colormax)
+        self._gcurve.randomjostle(colormax)
+        self._bcurve.randomjostle(colormax)
+        self._radcurve.randomjostle(radiusmax)
+
+    def redistributePoints(self, n):
+        self._poscurve.redistributePoints(n)
+        self._rcurve.redistributePoints(n)
+        self._gcurve.redistributePoints(n)
+        self._bcurve.redistributePoints(n)
+        self._radcurve.redistributePoints(n)
+
 
 def testbezier(filename):
     drw = Drawing()
@@ -60,12 +83,10 @@ def testbezier(filename):
     bl.setPos([50,200],[50,200])
     bl.setRGB([255,255],[0,255],[255,0])
     bl.setRad([4,4])
-    bl._poscurve.redistributePoints(21)
-    
-   # bl.draw(drw)
-    bl._poscurve.shift(0,20)
-    bl._poscurve.randomjostle(20)
+    bl.redistributePoints(5)
+    bl.randomize(20,50,2)
     bl.draw(drw)
     drw.toImage('./tests/bezier/'+filename+'.png',False)
 
-testbezier('0')
+
+testbezier(str(0))
