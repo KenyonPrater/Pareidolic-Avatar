@@ -1,4 +1,5 @@
 from math import factorial
+from random import uniform
 
 #Based off pycurve, https://code.google.com/p/pycurve/,
 #By Chandler Armstrong (omnirizon)
@@ -33,13 +34,18 @@ class Bezier(object):
         self.Y = ys
         self._n = range(len(xs))
 
+    def randomjostle(self, maxrandom):
+        for i in self._n:
+            self.X[i] = self.X[i]+uniform(-maxrandom, maxrandom)
+            self.Y[i] = self.Y[i]+uniform(-maxrandom, maxrandom)
+
     def shift(self,dx, dy):
         """shift entire bezier curve in a direction"""
         for i in self._n:
             self.X[i] = self.X[i]+dx
             self.Y[i] = self.Y[i]+dy
 
-    # other translation to come def rotate(centerX, cente):
+
 
     def __call__(self, t):
         """

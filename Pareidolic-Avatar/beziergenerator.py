@@ -57,12 +57,14 @@ class BezierLine(object):
 def testbezier(filename):
     drw = Drawing()
     bl = BezierLine()
-    bl.setPos([10,128-50,128-50,128,128+50,178,246],[200,200,100,100,100,200,200])
+    bl.setPos([50,200],[50,200])
     bl.setRGB([255,255],[0,255],[255,0])
     bl.setRad([4,4])
-    bl.draw(drw)
-    bl._poscurve.shift(0,20)
     bl._poscurve.redistributePoints(21)
+    
+   # bl.draw(drw)
+    bl._poscurve.shift(0,20)
+    bl._poscurve.randomjostle(20)
     bl.draw(drw)
     drw.toImage('./tests/bezier/'+filename+'.png',False)
 
