@@ -54,8 +54,8 @@ class BezierLine(object):
             rad = self.getRad(0)
             r,g,b = self.getRGB(time)
             drw.brush(x,y, r,g,b, rad, speed)
-            if mirror:
-                drw.brush(drw.getWidth()-x, y, r,g,b,rad, speed)
+            #if mirror:
+            #    drw.brush(drw.getWidth()-x, y, r,g,b,rad, speed)
             
             dt = (rad/2)/speed *dt
             time += dt
@@ -64,9 +64,9 @@ class BezierLine(object):
     def copy(self):
         bz = BezierLine()
         bz._poscurve = self._poscurve.copy()
-        bz._hcurve = self._rcurve.copy()
-        bz._scurve = self._gcurve.copy()
-        bz._vcurve = self._bcurve.copy()
+        bz._hcurve = self._hcurve.copy()
+        bz._scurve = self._scurve.copy()
+        bz._vcurve = self._vcurve.copy()
         bz._radcurve = self._radcurve.copy()
         return bz
 
@@ -88,12 +88,15 @@ class BezierLine(object):
 def testbezier(filename):
     drw = Drawing()
     bl = BezierLine()
-    bl.setPos([50,200],[50,200])
-    bl.setHSV([0,1],[1,1],[1,1])
+    bl.setPos([20,0],[20,230])
+    bl.setHSV([0,.1],[1,.6],[.6,1])
     bl.setRad([4,4])
-    bl.redistributePoints(100)
-    bl.randomize(20,.1,2)
-    bl.draw(drw)
+    bl.redistributePoints(5)
+    for i in range(5):
+        bl2 = bl.copy()
+        bl2._poscurve.shift(20*i,0)
+        bl2.randomize(20,.1,2)
+        bl2.draw(drw)
     drw.toImage('./tests/bezier/'+filename+'.png',False)
 
 
