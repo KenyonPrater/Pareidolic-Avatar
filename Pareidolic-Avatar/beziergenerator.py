@@ -11,15 +11,15 @@ class BezierLine(object):
         self._bcurve = Bezier([],[])
         self._radcurve = Bezier([],[])
 
-    def addPos(self, xs, ys):
+    def setPos(self, xs, ys):
         self._poscurve = Bezier(xs,ys)
 
-    def addRGB(self, rs, gs, bs):
+    def setRGB(self, rs, gs, bs):
         self._rcurve = Bezier(rs,[0]*len(rs))
         self._gcurve = Bezier(gs,[0]*len(gs))
         self._bcurve = Bezier(bs,[0]*len(bs))
 
-    def addRad(self, rads):
+    def setRad(self, rads):
         self._radcurve = Bezier(rads,[0]*len(rads))
 
     def getPos(self, t):
@@ -57,9 +57,12 @@ class BezierLine(object):
 def testbezier(filename):
     drw = Drawing()
     bl = BezierLine()
-    bl.addPos([10,128-50,128-50,128,128+50,178,246],[200,200,100,100,100,200,200])
-    bl.addRGB([255,255],[0,255],[255,0])
-    bl.addRad([4,4])
+    bl.setPos([10,128-50,128-50,128,128+50,178,246],[200,200,100,100,100,200,200])
+    bl.setRGB([255,255],[0,255],[255,0])
+    bl.setRad([4,4])
+    bl.draw(drw)
+    bl._poscurve.shift(0,20)
+    bl._poscurve.redistributePoints(21)
     bl.draw(drw)
     drw.toImage('./tests/bezier/'+filename+'.png',False)
 

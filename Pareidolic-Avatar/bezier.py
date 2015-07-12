@@ -20,6 +20,27 @@ class Bezier(object):
         self.Y = ys
         self._n = range(len(xs)) # control point iterator
 
+    def copy(self):
+        return Bezier(self.X, self.Y)
+
+    def redistributePoints(self, n):
+        xs = []
+        ys = []
+        for i in range(n):
+           xs += [self(i*1.0/(n-1))[0]]
+           ys += [self(i*1.0/(n-1))[1]]
+        self.X = xs
+        self.Y = ys
+        self._n = range(len(xs))
+
+    def shift(self,dx, dy):
+        """shift entire bezier curve in a direction"""
+        for i in self._n:
+            self.X[i] = self.X[i]+dx
+            self.Y[i] = self.Y[i]+dy
+
+    # other translation to come def rotate(centerX, cente):
+
     def __call__(self, t):
         """
         domain t in [0, 1]
