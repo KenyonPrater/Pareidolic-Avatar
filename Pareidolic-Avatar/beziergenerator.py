@@ -1,23 +1,24 @@
 from drawinghandler import *
 from random import randint, uniform
 from bezier import Bezier
+import colorsys
 
 class BezierLine(object):
 
     def __init__(self):
         self._poscurve = Bezier([],[])
-        self._rcurve = Bezier([],[])
-        self._gcurve = Bezier([],[])
-        self._bcurve = Bezier([],[])
+        self._hcurve = Bezier([],[])
+        self._scurve = Bezier([],[])
+        self._vcurve = Bezier([],[])
         self._radcurve = Bezier([],[])
 
     def setPos(self, xs, ys):
         self._poscurve = Bezier(xs,ys)
 
-    def setRGB(self, rs, gs, bs):
-        self._rcurve = Bezier(rs,[0]*len(rs))
-        self._gcurve = Bezier(gs,[0]*len(gs))
-        self._bcurve = Bezier(bs,[0]*len(bs))
+    def setHSV(self, hs, ss, vs):
+        self._hcurve = Bezier(hs,[0]*len(hs))
+        self._scurve = Bezier(ss,[0]*len(ss))
+        self._vcurve = Bezier(vs,[0]*len(vs))
 
     def setRad(self, rads):
         self._radcurve = Bezier(rads,[0]*len(rads))
@@ -25,8 +26,15 @@ class BezierLine(object):
     def getPos(self, t):
         return self._poscurve(t)
 
+    def getHSV(self, t):
+        return self._hcurve(t)[0],self._scurve(t)[0],self._vcurve(t)[0]
+
     def getRGB(self, t):
-        return self._rcurve(t)[0],self._gcurve(t)[0],self._bcurve(t)[0]
+        val = colorsys.hsv_to_rgb(self._hcurve(t)[0],self._scurve(t)[0],self._vcurve(t)[0])
+        val2 = []
+        for i in range(len(val)):
+            val2 += [val[i]*256]
+        return tuple(val2)
 
     def getRad(self, t):
         return self._radcurve(t)[0]
@@ -56,24 +64,24 @@ class BezierLine(object):
     def copy(self):
         bz = BezierLine()
         bz._poscurve = self._poscurve.copy()
-        bz._rcurve = self._rcurve.copy()
-        bz._gcurve = self._gcurve.copy()
-        bz._bcurve = self._bcurve.copy()
+        bz._hcurve = self._rcurve.copy()
+        bz._scurve = self._gcurve.copy()
+        bz._vcurve = self._bcurve.copy()
         bz._radcurve = self._radcurve.copy()
         return bz
 
     def randomize(self, positionmax, colormax, radiusmax):
         self._poscurve.randomjostle(positionmax)
-        self._rcurve.randomjostle(colormax)
-        self._gcurve.randomjostle(colormax)
-        self._bcurve.randomjostle(colormax)
+        self._hcurve.randomjostle(colormax)
+        self._scurve.randomjostle(colormax)
+        self._vcurve.randomjostle(colormax)
         self._radcurve.randomjostle(radiusmax)
 
     def redistributePoints(self, n):
         self._poscurve.redistributePoints(n)
-        self._rcurve.redistributePoints(n)
-        self._gcurve.redistributePoints(n)
-        self._bcurve.redistributePoints(n)
+        self._hcurve.redistributePoints(n)
+        self._scurve.redistributePoints(n)
+        self._vcurve.redistributePoints(n)
         self._radcurve.redistributePoints(n)
 
 
@@ -81,10 +89,10 @@ def testbezier(filename):
     drw = Drawing()
     bl = BezierLine()
     bl.setPos([50,200],[50,200])
-    bl.setRGB([255,0],[255,0],[255,0])
+    bl.setHSV([0,1],[1,1],[1,1])
     bl.setRad([4,4])
     bl.redistributePoints(100)
-    bl.randomize(20,100,2)
+    bl.randomize(20,.1,2)
     bl.draw(drw)
     drw.toImage('./tests/bezier/'+filename+'.png',False)
 
