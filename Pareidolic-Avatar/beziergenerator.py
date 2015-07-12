@@ -81,10 +81,10 @@ def testbezier(filename):
     drw = Drawing()
     bl = BezierLine()
     bl.setPos([50,200],[50,200])
-    bl.setRGB([255,255],[0,255],[255,0])
+    bl.setRGB([255,0],[255,0],[255,0])
     bl.setRad([4,4])
-    bl.redistributePoints(5)
-    bl.randomize(20,50,2)
+    bl.redistributePoints(100)
+    bl.randomize(20,100,2)
     bl.draw(drw)
     drw.toImage('./tests/bezier/'+filename+'.png',False)
 
