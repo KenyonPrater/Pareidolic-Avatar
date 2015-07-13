@@ -54,8 +54,8 @@ class BezierLine(object):
             rad = self.getRad(0)
             r,g,b = self.getRGB(time)
             drw.brush(x,y, r,g,b, rad, speed)
-            #if mirror:
-            #    drw.brush(drw.getWidth()-x, y, r,g,b,rad, speed)
+            if mirror:
+                drw.brush(drw.getWidth()-x, y, r,g,b,rad, speed)
             
             dt = (rad/2)/speed *dt
             time += dt
@@ -88,15 +88,18 @@ class BezierLine(object):
 def testbezier(filename):
     drw = Drawing()
     bl = BezierLine()
-    bl.setPos([20,20],[20,230])
-    bl.setHSV([0,.1],[1,.6],[.6,1])
+    bl.setPos([20,256-20],[20,256-20])
+    bl.setHSV([0,1],[1,1],[1,1])
     bl.setRad([4,4])
-    bl.redistributePoints(5)
-    for i in range(10):
-        bl2 = bl.copy()
-        bl2._poscurve.shift(20*i,0)
-        bl2.randomize(10,.03,1)
-        bl2.draw(drw) # bl2 is changing bl. Look over bezier copy
+    bl.redistributePoints(10)
+    bl.randomize(10,.07,1)#
+    bl.draw(drw)# See if smoothness improves rainbow blending.
+    
+    #for i in range(10):
+    #    bl2 = bl.copy()
+    #    bl2._poscurve.shift(20*i,0)
+    #    bl2.randomize(10,.07,1)
+    #    bl2.draw(drw) # bl2 is changing bl. Look over bezier copy
     drw.toImage('./tests/bezier/'+filename+'.png',False)
 
 
