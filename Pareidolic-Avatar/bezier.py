@@ -22,7 +22,7 @@ class Bezier(object):
         self._n = range(len(xs)) # control point iterator
 
     def copy(self):
-        return Bezier(self.X, self.Y)
+        return Bezier(self.X[:], self.Y[:])
 
     def redistributePoints(self, n):
         xs = []

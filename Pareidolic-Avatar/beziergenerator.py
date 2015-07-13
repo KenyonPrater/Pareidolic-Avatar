@@ -88,15 +88,15 @@ class BezierLine(object):
 def testbezier(filename):
     drw = Drawing()
     bl = BezierLine()
-    bl.setPos([20,0],[20,230])
+    bl.setPos([20,20],[20,230])
     bl.setHSV([0,.1],[1,.6],[.6,1])
     bl.setRad([4,4])
     bl.redistributePoints(5)
     for i in range(5):
         bl2 = bl.copy()
-        bl2._poscurve.shift(20*i,0)
+        bl2._poscurve.shift(40*i,0)
         bl2.randomize(20,.1,2)
-        bl2.draw(drw)
+        bl2.draw(drw) # bl2 is changing bl. Look over bezier copy
     drw.toImage('./tests/bezier/'+filename+'.png',False)
 
 
