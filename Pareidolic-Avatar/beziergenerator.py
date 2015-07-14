@@ -2,6 +2,7 @@ from drawinghandler import *
 from random import randint, uniform
 from bezier import Bezier
 import colorsys
+from math import sin, cos, radians
 
 class BezierLine(object):
 
@@ -84,6 +85,30 @@ class BezierLine(object):
         self._vcurve.redistributePoints(n)
         self._radcurve.redistributePoints(n)
 
+def generateDominantBezier(hsvDominant, linkNum = 7, linkdist = 200, linkAngle = 180, radius = 5, hsvChange = .1, radiusChange = 1):
+    bl = BezierLine()
+    bl.setPos([0,0],[0,0])
+    bl.setHSV([hsvDominant[0]+uniform(-hsvChange,hsvChange),hsvDominant[0]+uniform(-hsvChange,hsvChange)],[hsvDominant[1]+uniform(-hsvChange,hsvChange),hsvDominant[1]+uniform(-hsvChange,hsvChange)],[hsvDominant[2]+uniform(-hsvChange,hsvChange),hsvDominant[2]+uniform(-hsvChange,hsvChange)])
+    bl.setRad([radius+uniform(-radiusChange, radiusChange),radius+uniform(-radiusChange, radiusChange)]*5)
+    bl.redistributePoints(linkNum)
+    bl.randomize(0,hsvChange,radiusChange)
+    xs = []
+    ys = []
+    x = uniform(10,245)
+    y = uniform(10,245)
+    theta = uniform(0,360)
+    for i in range(linkNum):
+        xs += [x]
+        ys += [y]
+
+        dist = uniform(0, linkdist)
+        x += cos(radians(theta))*dist
+        y += sin(radians(theta))*dist
+        y = min(245, max(10,y))
+        x = min(245, max(10,x))
+        theta += uniform(-linkAngle, linkAngle)
+    bl.setPos(xs, ys)
+    return bl
 
 def testbezier(filename):
     drw = Drawing()
@@ -93,7 +118,7 @@ def testbezier(filename):
     bl.setRad([4,4])
     bl.redistributePoints(10)
     bl.randomize(10,.07,1)#
-    bl.draw(drw)# See if smoothness improves rainbow blending.
+    bl.draw(drw)
     
     #for i in range(10):
     #    bl2 = bl.copy()
@@ -103,4 +128,12 @@ def testbezier(filename):
     drw.toImage('./tests/bezier/'+filename+'.png',False)
 
 
-testbezier(str(0))
+def testRandom(filename):
+    drw = Drawing()
+    h,s,v = uniform(0,1), uniform(0,1), uniform(.3,.9)
+    for i in range(3):
+        bl = generateDominantBezier((h,s,v))
+        bl.draw(drw)
+    drw.toImage('./tests/bezier/'+filename+'.png',False)
+
+testRandom(str(1))
