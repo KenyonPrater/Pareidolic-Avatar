@@ -41,24 +41,29 @@ class BezierLine(object):
         return self._radcurve(t)[0]
 
     def draw(self, drw, mirror=True):
+        print(self)
         time = 0
-        dt = .01
+        dt = .005
         xold,yold = self.getPos(time)
         x,y = self.getPos(time +dt)
-        speed = ((x-xold)**2 + (y-yold)**2)**.5
+        ds = ((x-xold)**2 + (y-yold)**2)**.5
         rad = self.getRad(0)
-        dt = (rad*dt)/(2*speed)
         time += dt
         while time < 1:
             x,y = self.getPos(time)
-            speed = (x-xold)**2 + (y-yold)**2
+            ds = ((x-xold)**2 + (y-yold)**2)**.5
             rad = self.getRad(0)
             r,g,b = self.getRGB(time)
-            drw.brush(x,y, r,g,b, rad, speed)
-            if mirror:
-                drw.brush(drw.getWidth()-x, y, r,g,b,rad, speed)
+            if(dt*(5+(rad/2)/ds)/6 > 0.05):
+                print ('t',time,'dt',dt,'nextdt',dt*(5+(rad/2)/ds)/6,'x',x,'y',y,'xold',xold,'yold',yold,'ds',ds,'change',(5+(rad/2)/ds)/6)
             
-            dt = (rad/2)/speed *dt
+            drw.brush(x,y, r,g,b, rad, ds)
+            #drw.brush(x,time*256.0, r,g,b, rad, ds/dt)
+            
+            if mirror:
+                #pass
+                drw.brush(drw.getWidth()-x, y, r,g,b,rad, ds)
+            
             time += dt
             xold, yold = x, y
 
@@ -136,5 +141,5 @@ def testRandom(filename):
         bl.draw(drw)
     drw.toImage('./tests/bezier/'+filename+'.png',False)
 
-seed(0)
+seed(1)
 testRandom(str(1))
