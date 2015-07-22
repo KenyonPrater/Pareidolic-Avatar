@@ -12,6 +12,7 @@ class BezierLine(object):
         self._scurve = Bezier([],[])
         self._vcurve = Bezier([],[])
         self._radcurve = Bezier([],[])
+        self._alphacurve = Bezier([],[])
 
     def setPos(self, xs, ys):
         self._poscurve = Bezier(xs,ys)
@@ -23,6 +24,9 @@ class BezierLine(object):
 
     def setRad(self, rads):
         self._radcurve = Bezier(rads,[0]*len(rads))
+
+    def setAlpha(self, alpha):
+        self._alphacurve = Bezier(alpha,[0]*len(alpha))
 
     def getPos(self, t):
         return self._poscurve(t)
@@ -40,6 +44,9 @@ class BezierLine(object):
     def getRad(self, t):
         return self._radcurve(t)[0]
 
+    def getAlpha(self, t):
+        return self._alphacurve(t)[0]
+
     def draw(self, drw, mirror=True):
         time = 0
         dt = .005
@@ -50,15 +57,13 @@ class BezierLine(object):
         time += dt
         while time < 1:
             x,y = self.getPos(time)
+            alpha = self.getAlpha(time)
             ds = ((x-xold)**2 + (y-yold)**2)**.5
             rad = self.getRad(0)
             r,g,b = self.getRGB(time)
-            drw.brush(x,y, r,g,b, rad, ds)
-            #drw.brush(x,time*256.0, r,g,b, rad, ds/dt)
-            
+            drw.brush(x,y, r,g,b, rad, ds,alpha)
             if mirror:
-                #pass
-                drw.brush(drw.getWidth()-x, y, r,g,b,rad, ds)
+                drw.brush(drw.getWidth()-x, y, r,g,b,rad, ds, alpha)
             
             time += dt
             xold, yold = x, y
@@ -70,14 +75,16 @@ class BezierLine(object):
         bz._scurve = self._scurve.copy()
         bz._vcurve = self._vcurve.copy()
         bz._radcurve = self._radcurve.copy()
+        bz._alphacurve = self._alphacurve.copy()
         return bz
 
-    def randomize(self, positionmax, colormax, radiusmax):
+    def randomize(self, positionmax=0, colormax=0, radiusmax=0,alphamax=0):
         self._poscurve.randomjostle(positionmax)
         self._hcurve.randomjostle(colormax)
         self._scurve.randomjostle(colormax)
         self._vcurve.randomjostle(colormax)
         self._radcurve.randomjostle(radiusmax)
+        self._alphacurve.randomjostle(alphamax)
 
     def redistributePoints(self, n):
         self._poscurve.redistributePoints(n)
@@ -85,12 +92,14 @@ class BezierLine(object):
         self._scurve.redistributePoints(n)
         self._vcurve.redistributePoints(n)
         self._radcurve.redistributePoints(n)
+        self._alphacurve.redistributePoints(n)
 
 def generateDominantBezier(hsvDominant, linkNum = 7, linkdist = 200, linkAngle = 180, radius = 5, hsvChange = .1, radiusChange = 1):
     bl = BezierLine()
     bl.setPos([0,0],[0,0])
     bl.setHSV([hsvDominant[0]+uniform(-hsvChange,hsvChange),hsvDominant[0]+uniform(-hsvChange,hsvChange)],[hsvDominant[1]+uniform(-hsvChange,hsvChange),hsvDominant[1]+uniform(-hsvChange,hsvChange)],[hsvDominant[2]+uniform(-hsvChange,hsvChange),hsvDominant[2]+uniform(-hsvChange,hsvChange)])
     bl.setRad([radius+uniform(-radiusChange, radiusChange),radius+uniform(-radiusChange, radiusChange)]*5)
+    bl.setAlpha([0,1,1,1,1,1,0])
     bl.redistributePoints(linkNum)
     bl.randomize(0,hsvChange,radiusChange)
     xs = []

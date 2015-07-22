@@ -73,11 +73,11 @@ class Drawing():
             img.save(filename)
         return img
 
-    def brush(self,x,y,r,g,b,radius = 3,speed=1):
+    def brush(self,x,y,r,g,b,radius = 3,speed=1,alpha=1.0):
         for i in range(int(y-radius-1), int(y+radius+2)):
             for j in range(int(x-radius-1), int(x+radius+2)):
                 if 0<=i<self._height and  0<=j<self._width:
-                    weight = 256*(1-((i-y)**2 + (j-x)**2)/radius**2)*speed/radius
+                    weight = 256*alpha*(1-((i-y)**2 + (j-x)**2)/radius**2)*speed/radius
                     weight = min(weight, 255)
                     if weight > 0:
                         self._data[int(j)][int(i)].mixColor(r,g,b,weight)
