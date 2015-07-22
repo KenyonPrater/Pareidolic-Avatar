@@ -168,13 +168,28 @@ def testRandom(filename):
     drw = Drawing()
     h,s,v = uniform(0,1), uniform(0,1), uniform(.3,.9)
     for i in range(3):
+        seed(i)
         bl = generateDominantBezier((h,s,v))
+        seed()
+        bl.randomize(20,.1,1)
+        
         bl.draw(drw)
+    seed(0)
     h,s,v = uniform(0,1), uniform(0,1), uniform(.3,.9)
     for i in range(3):
+        seed(i+5)
         bl = generateAccentBezier((h,s,v))
+        seed()
+        bl.randomize(20,.1,1)
+        
         bl.draw(drw)
     drw.toImage('./tests/bezier/'+filename+'.png',False)
 
-seed()
+seed(43)
 testRandom(str(1))
+seed(43)
+testRandom(str(2))
+seed(43)
+testRandom(str(3))
+seed(43)
+testRandom(str(4))
