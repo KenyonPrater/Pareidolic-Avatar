@@ -1,5 +1,5 @@
 from drawinghandler import *
-from random import randint, uniform
+from random import randint, uniform, seed
 from bezier import Bezier
 import colorsys
 from math import sin, cos, radians
@@ -136,4 +136,5 @@ def testRandom(filename):
         bl.draw(drw)
     drw.toImage('./tests/bezier/'+filename+'.png',False)
 
+seed(0)
 testRandom(str(1))
