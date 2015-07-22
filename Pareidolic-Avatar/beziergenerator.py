@@ -120,6 +120,32 @@ def generateDominantBezier(hsvDominant, linkNum = 7, linkdist = 200, linkAngle =
     bl.setPos(xs, ys)
     return bl
 
+def generateAccentBezier(hsvAccent, linkNum = 3, linkdist = 100, linkAngle = 180, radius = 2, hsvChange = .1, radiusChange = .5):
+    bl = BezierLine()
+    bl.setPos([0,0],[0,0])
+    bl.setHSV([hsvAccent[0]+uniform(-hsvChange,hsvChange),hsvAccent[0]+uniform(-hsvChange,hsvChange)],[hsvAccent[1]+uniform(-hsvChange,hsvChange),hsvAccent[1]+uniform(-hsvChange,hsvChange)],[hsvAccent[2]+uniform(-hsvChange,hsvChange),hsvAccent[2]+uniform(-hsvChange,hsvChange)])
+    bl.setRad([radius+uniform(-radiusChange, radiusChange),radius+uniform(-radiusChange, radiusChange)]*5)
+    bl.setAlpha([0,1,1,1,1,1,0])
+    bl.redistributePoints(linkNum)
+    bl.randomize(0,hsvChange,radiusChange)
+    xs = []
+    ys = []
+    x = uniform(10,245)
+    y = uniform(10,245)
+    theta = uniform(0,360)
+    for i in range(linkNum):
+        xs += [x]
+        ys += [y]
+
+        dist = uniform(0, linkdist)
+        x += cos(radians(theta))*dist
+        y += sin(radians(theta))*dist
+        y = min(245, max(10,y))
+        x = min(245, max(10,x))
+        theta += uniform(-linkAngle, linkAngle)
+    bl.setPos(xs, ys)
+    return bl
+
 def testbezier(filename):
     drw = Drawing()
     bl = BezierLine()
@@ -143,6 +169,10 @@ def testRandom(filename):
     h,s,v = uniform(0,1), uniform(0,1), uniform(.3,.9)
     for i in range(3):
         bl = generateDominantBezier((h,s,v))
+        bl.draw(drw)
+    h,s,v = uniform(0,1), uniform(0,1), uniform(.3,.9)
+    for i in range(3):
+        bl = generateAccentBezier((h,s,v))
         bl.draw(drw)
     drw.toImage('./tests/bezier/'+filename+'.png',False)
 
