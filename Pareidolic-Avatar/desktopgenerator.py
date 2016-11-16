@@ -3,6 +3,9 @@ from random import randint, uniform, seed
 from bezier import Bezier
 import colorsys
 from math import sin, cos, radians
+from PIL import Image
+import subprocess
+import os
 
 class BezierLine(object):
 
@@ -163,33 +166,29 @@ def testbezier(filename):
     #    bl2.draw(drw) # bl2 is changing bl. Look over bezier copy
     drw.toImage('./tests/bezier/'+filename+'.png',False)
 
+def tint(image, rgb):
+    R,G,B = uniform(0,1), uniform(0,1), uniform(0,1)
+    for i in range(image.width):
+        for j in range(image.height):
+            r,g,b = image.getpixel((i, j))
+            image.putpixel((i,j), (int(r*R), int(g*G), int(b*B)))
 
-def testRandom(filename):
+def testRandom():
     drw = Drawing()
     h,s,v = uniform(0,1), uniform(0,1), uniform(.3,.9)
     for i in range(3):
-        seed(i)
         bl = generateDominantBezier((h,s,v))
-        seed()
-        bl.randomize(20,.1,1)
-
         bl.draw(drw)
-    seed(0)
     h,s,v = uniform(0,1), uniform(0,1), uniform(.3,.9)
     for i in range(3):
-        seed(i+5)
         bl = generateAccentBezier((h,s,v))
-        seed()
-        bl.randomize(20,.1,1)
-
         bl.draw(drw)
-    drw.toImage('./tests/bezier/'+filename+'.png',False)
+    im = drw.toImage()
+    desktop = Image.open("./tests/desktop/background.png")
+    color = colorsys.hsv_to_rgb(uniform(0,1), uniform(0,1), uniform(0,1))
+    tint(desktop, color)
+    desktop.paste(im, ((1920/2 - 256/2), (1080/2 - 256/2)))
+    desktop.save("./tests/desktop/background1.png")
+    subprocess.call(["dconf", "write", "/org/gnome/desktop/background/picture-uri", "'file://"+ (os.path.dirname(os.path.abspath(__file__))) +"/tests/desktop/background1.png'"])
 
-seed(43)
-testRandom(str(1))
-seed(43)
-testRandom(str(2))
-seed(43)
-testRandom(str(3))
-seed(43)
-testRandom(str(4))
+testRandom()
